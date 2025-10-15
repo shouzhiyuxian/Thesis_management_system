@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}编辑通知 - 管理员{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>编辑通知</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="title" class="form-label">通知标题</label>
+            <input type="text" class="form-control" id="title" name="title" required value="{{ notice.title }}">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">通知内容</label>
+            <textarea class="form-control" id="content" name="content" rows="8" required>{{ notice.content }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="lead_foot" class="form-label">引脚（可选）</label>
+            <input type="text" class="form-control" id="lead_foot" name="lead_foot" value="{{ notice.lead_foot }}">
+        </div>
+        <button type="submit" class="btn btn-primary">保存修改</button>
+        <a href="{{ url_for('admin.notices') }}" class="btn btn-secondary ms-2">返回</a>
+    </form>
+</div>
+{% endblock %}

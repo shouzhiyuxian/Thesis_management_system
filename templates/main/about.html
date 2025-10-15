@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}关于系统 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2>关于毕业论文管理系统</h2>
+            <hr>
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>系统简介</h4>
+                    <p>毕业论文管理系统是一个面向毕业生，为了便利毕业生与毕业设计导师的沟通而设计并实现的一套系统。系统采用Flask框架开发，基于B/S架构，使用标准的MVC设计模式。</p>
+                    
+                    <h4 class="mt-4">主要功能</h4>
+                    <ul>
+                        <li><strong>用户管理</strong>：支持管理员、教师、学生三种角色的信息管理</li>
+                        <li><strong>通知发布</strong>：管理员和教师可以发布论文相关通知</li>
+                        <li><strong>资料管理</strong>：教师可以上传指导资料，学生可以下载</li>
+                        <li><strong>论文管理</strong>：学生可以上传论文，教师可以批阅</li>
+                        <li><strong>流程控制</strong>：管理员可以控制整个论文流程的进度</li>
+                    </ul>
+                    
+                    <h4 class="mt-4">技术特点</h4>
+                    <ul>
+                        <li>基于Flask 2.0.2框架</li>
+                        <li>使用MySQL数据库存储数据</li>
+                        <li>响应式前端设计，支持移动端访问</li>
+                        <li>支持文件上传下载功能</li>
+                        <li>完善的用户权限管理</li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-info-circle"></i> 系统信息</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>版本：</strong>1.0.0</p>
+                            <p><strong>开发语言：</strong>Python 3.8</p>
+                            <p><strong>Web框架：</strong>Flask 2.0.2</p>
+                            <p><strong>数据库：</strong>MySQL</p>
+                            <p><strong>前端框架：</strong>Bootstrap 5</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

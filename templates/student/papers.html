@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}我的论文 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-file-alt"></i> 我的论文</h2>
+    <a href="{{ url_for('student.upload_paper') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> 上传论文
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if papers.items %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>论文名称</th>
+                        <th>指导教师</th>
+                        <th>上传时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paper in papers.items %}
+                    <tr>
+                        <td>{{ paper.paper_name }}</td>
+                        <td>{{ paper.teacher.username if paper.teacher else '未分配' }}</td>
+                        <td>{{ paper.upload_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ url_for('student.view_paper', paper_id=paper.id) }}" 
+                                   class="btn btn-outline-primary">
+                                    <i class="fas fa-eye"></i> 查看
+                                </a>
+                                <a href="{{ url_for('student.download_paper', paper_id=paper.id) }}" 
+                                   class="btn btn-outline-success">
+                                    <i class="fas fa-download"></i> 下载
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 分页 -->
+        {% if papers.pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if papers.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('student.papers', page=papers.prev_num) }}">上一页</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in papers.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != papers.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('student.papers', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if papers.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('student.papers', page=papers.next_num) }}">下一页</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">暂无论文</p>
+            <a href="{{ url_for('student.upload_paper') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> 上传第一份论文
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

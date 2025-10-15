@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}添加用户 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-user-plus"></i> 添加用户</h2>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> 返回列表
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>用户信息</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="user_type" class="form-label">用户类型 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="user_type" name="user_type" required onchange="toggleFields()">
+                                    <option value="">请选择用户类型</option>
+                                    <option value="student">学生</option>
+                                    <option value="teacher">教师</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">姓名 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">密码 <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="sex" class="form-label">性别</label>
+                                <select class="form-select" id="sex" name="sex">
+                                    <option value="">请选择</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="birth" class="form-label">生日</label>
+                                <input type="date" class="form-control" id="birth" name="birth">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="native_place_id" class="form-label">籍贯</label>
+                                <select class="form-select" id="native_place_id" name="native_place_id">
+                                    <option value="">请选择</option>
+                                    {% for place in native_places %}
+                                    <option value="{{ place.id }}">{{ place.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 学生特有字段 -->
+                    <div id="student_fields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="student_no" class="form-label">学号 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="student_no" name="student_no">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="class_id" class="form-label">班级</label>
+                                    <select class="form-select" id="class_id" name="class_id">
+                                        <option value="">请选择</option>
+                                        {% for class_item in classes %}
+                                        <option value="{{ class_item.id }}">{{ class_item.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="grade_id" class="form-label">年级</label>
+                                    <select class="form-select" id="grade_id" name="grade_id">
+                                        <option value="">请选择</option>
+                                        {% for grade in grades %}
+                                        <option value="{{ grade.id }}">{{ grade.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="teacher_id" class="form-label">指导教师</label>
+                                    <select class="form-select" id="teacher_id" name="teacher_id">
+                                        <option value="">请选择</option>
+                                        {% for teacher in teachers %}
+                                        <option value="{{ teacher.id }}">{{ teacher.username }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 教师特有字段 -->
+                    <div id="teacher_fields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="teacher_no" class="form-label">教师编号 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="teacher_no" name="teacher_no">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="descs" class="form-label">教师简介</label>
+                            <textarea class="form-control" id="descs" name="descs" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> 保存
+                        </button>
+                        <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> 取消
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleFields() {
+    const userType = document.getElementById('user_type').value;
+    const studentFields = document.getElementById('student_fields');
+    const teacherFields = document.getElementById('teacher_fields');
+    
+    studentFields.style.display = 'none';
+    teacherFields.style.display = 'none';
+    
+    if (userType === 'student') {
+        studentFields.style.display = 'block';
+    } else if (userType === 'teacher') {
+        teacherFields.style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

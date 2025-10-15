@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}论文详情 - 毕业论文管理系统{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>论文详情</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ paper.paper_name }}</h5>
+            <p class="card-text">指导教师：{{ paper.teacher.username if paper.teacher else '未分配' }}</p>
+            <p class="card-text">上传时间：{{ paper.upload_time.strftime('%Y-%m-%d %H:%M') }}</p>
+            <a href="{{ url_for('student.download_paper', paper_id=paper.id) }}" class="btn btn-success">
+                <i class="fas fa-download"></i> 下载论文
+            </a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h5>批阅记录</h5>
+        </div>
+        <div class="card-body">
+            {% if comments %}
+            <ul class="list-group">
+                {% for comment in comments %}
+                <li class="list-group-item">
+                    <strong>{{ comment.teacher.username if comment.teacher else comment.teacher_no }}：</strong>
+                    {{ comment.content }}
+                    <span class="text-muted float-end">{{ comment.create_time.strftime('%Y-%m-%d %H:%M') }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted">暂无批阅记录</p>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{{ url_for('student.papers') }}" class="btn btn-secondary mt-3">返回论文列表</a>
+</div>
+{% endblock %}

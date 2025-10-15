@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}通知管理 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-bullhorn"></i> 通知管理</h2>
+    <a href="{{ url_for('admin.add_notice') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> 发布通知
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">通知列表</h5>
+    </div>
+    <div class="card-body">
+        {% if notices.items %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>标题</th>
+                        <th>内容摘要</th>
+                        <th>发布时间</th>
+                        <th>发布人</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notice in notices.items %}
+                    <tr>
+                        <td>{{ notice.title }}</td>
+                        <td>{{ notice.content[:50] }}...</td>
+                        <td>{{ notice.create_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ notice.admin.username if notice.admin else '系统' }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ url_for('admin.edit_notice', notice_id=notice.id) }}" 
+                                   class="btn btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{{ url_for('admin.delete_notice', notice_id=notice.id) }}" 
+                                   class="btn btn-outline-danger"
+                                   onclick="return confirm('确定要删除这个通知吗？')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 分页 -->
+        {% if notices.pages > 1 %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if notices.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.notices', page=notices.prev_num) }}">上一页</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in notices.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != notices.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('admin.notices', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if notices.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.notices', page=notices.next_num) }}">下一页</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">暂无通知</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

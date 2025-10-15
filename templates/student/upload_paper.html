@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}上传论文 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-upload"></i> 上传论文</h2>
+    <a href="{{ url_for('student.papers') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> 返回列表
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>论文信息</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="upload_folder" value="{{ url_for('static', filename='uploads') }}">
+                    
+                    <div class="mb-3">
+                        <label for="paper_name" class="form-label">论文名称 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="paper_name" name="paper_name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="teacher_no" class="form-label">指导教师</label>
+                        <select class="form-select" id="teacher_no" name="teacher_no" required>
+                            <option value="">请选择指导教师</option>
+                            {% if student.teacher %}
+                            <option value="{{ student.teacher.teacher_no }}" selected>
+                                {{ student.teacher.username }} ({{ student.teacher.teacher_no }})
+                            </option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="file" class="form-label">选择文件 <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".pdf,.doc,.docx,.txt" required>
+                        <div class="form-text">支持的文件格式：PDF, DOC, DOCX, TXT</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> 上传论文
+                        </button>
+                        <a href="{{ url_for('student.papers') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> 取消
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}通知公告 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<h2><i class="fas fa-bullhorn"></i> 通知公告</h2>
+<hr>
+
+<div class="card">
+    <div class="card-body">
+        {% if notices.items %}
+        <div class="list-group">
+            {% for notice in notices.items %}
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ notice.title }}</h5>
+                    <small>{{ notice.create_date.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+                <p class="mb-1">{{ notice.content[:200] }}...</p>
+                {% if notice.lead_foot %}
+                <small class="text-muted">{{ notice.lead_foot }}</small>
+                {% endif %}
+                <div class="mt-2">
+                    <a href="{{ url_for('student.view_notice', notice_id=notice.id) }}" class="btn btn-sm btn-outline-primary">查看详情</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- 分页 -->
+        {% if notices.pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if notices.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('student.notices', page=notices.prev_num) }}">上一页</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in notices.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != notices.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('student.notices', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if notices.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('student.notices', page=notices.next_num) }}">下一页</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">暂无通知</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

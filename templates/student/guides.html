@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}指导资料 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<h2><i class="fas fa-book"></i> 指导资料</h2>
+<hr>
+
+<div class="card">
+    <div class="card-body">
+        {% if guides.items %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>资料名称</th>
+                        <th>上传教师</th>
+                        <th>上传时间</th>
+                        <th>下载次数</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for guide in guides.items %}
+                    <tr>
+                        <td>{{ guide.file_name }}</td>
+                        <td>{{ guide.teacher.username if guide.teacher else '未知' }}</td>
+                        <td>{{ guide.create_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ guide.download_time }}</td>
+                        <td>
+                            <a href="{{ url_for('student.download_guide', guide_id=guide.id) }}" 
+                               class="btn btn-sm btn-primary">
+                                <i class="fas fa-download"></i> 下载
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 分页 -->
+        {% if guides.pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if guides.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('student.guides', page=guides.prev_num) }}">上一页</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in guides.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != guides.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('student.guides', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if guides.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('student.guides', page=guides.next_num) }}">下一页</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">暂无指导资料</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

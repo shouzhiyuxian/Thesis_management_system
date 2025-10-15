@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}管理面板 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<h2><i class="fas fa-tachometer-alt"></i> 管理面板</h2>
+<hr>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            学生总数</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ student_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-graduate fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            教师总数</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ teacher_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            通知总数</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ notice_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-bullhorn fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            论文总数</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ paper_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">最新通知</h6>
+                <a href="{{ url_for('admin.notices') }}" class="btn btn-sm btn-primary">查看全部</a>
+            </div>
+            <div class="card-body">
+                {% if recent_notices %}
+                <div class="list-group">
+                    {% for notice in recent_notices %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ notice.title }}</h6>
+                            <small>{{ notice.create_date.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                        <p class="mb-1">{{ notice.content[:100] }}...</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">暂无通知</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">快速操作</h6>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('admin.add_user') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user-plus"></i> 添加用户
+                    </a>
+                    <a href="{{ url_for('admin.add_notice') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-bullhorn"></i> 发布通知
+                    </a>
+                    <a href="{{ url_for('admin.process_control') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cogs"></i> 进程控制
+                    </a>
+                    <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users"></i> 用户管理
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

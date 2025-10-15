@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}论文管理 - 管理员{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>所有学生论文管理</h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>论文名称</th>
+                <th>学生姓名</th>
+                <th>学号</th>
+                <th>指导教师</th>
+                <th>上传时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for paper in papers.items %}
+            <tr>
+                <td>{{ paper.paper_name }}</td>
+                <td>{{ paper.student.username if paper.student else '' }}</td>
+                <td>{{ paper.student_no }}</td>
+                <td>{{ paper.teacher.username if paper.teacher else '' }}</td>
+                <td>{{ paper.upload_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <a class="btn btn-sm btn-info" href="{{ url_for('admin.view_paper', paper_id=paper.id) }}">查看</a>
+                    <a class="btn btn-sm btn-success" href="{{ url_for('admin.download_paper', paper_id=paper.id) }}">下载</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">暂无论文</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination">
+            {% if papers.has_prev %}
+            <li class="page-item"><a class="page-link" href="?page={{ papers.prev_num }}">上一页</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">第 {{ papers.page }}/{{ papers.pages }} 页</span></li>
+            {% if papers.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ papers.next_num }}">下一页</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

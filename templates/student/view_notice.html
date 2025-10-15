@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{{ notice.title }} - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ notice.title }}</h2>
+    <a href="{{ url_for('student.notices') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> 返回列表
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted">发布时间：{{ notice.create_date.strftime('%Y-%m-%d %H:%M') }}</span>
+            {% if notice.lead_foot %}
+            <span class="badge bg-secondary">{{ notice.lead_foot }}</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="notice-content">
+            {{ notice.content|safe }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}用户管理 - 毕业论文管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-users"></i> 用户管理</h2>
+    <a href="{{ url_for('admin.add_user') }}" class="btn btn-primary">
+        <i class="fas fa-user-plus"></i> 添加用户
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="mb-0">用户列表</h5>
+            </div>
+            <div class="col-md-6">
+                <div class="btn-group" role="group">
+                    <a href="{{ url_for('admin.users', type='all') }}" 
+                       class="btn btn-sm {% if user_type == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">全部</a>
+                    <a href="{{ url_for('admin.users', type='student') }}" 
+                       class="btn btn-sm {% if user_type == 'student' %}btn-primary{% else %}btn-outline-primary{% endif %}">学生</a>
+                    <a href="{{ url_for('admin.users', type='teacher') }}" 
+                       class="btn btn-sm {% if user_type == 'teacher' %}btn-primary{% else %}btn-outline-primary{% endif %}">教师</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if users.items %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>生日</th>
+                        {% if user_type == 'student' %}
+                        <th>班级</th>
+                        <th>年级</th>
+                        <th>指导教师</th>
+                        {% endif %}
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users.items %}
+                    <tr>
+                        <td>
+                            {% if user_type == 'student' %}
+                                {{ user.student_no }}
+                            {% elif user_type == 'teacher' %}
+                                {{ user.teacher_no }}
+                            {% else %}
+                                {{ user.student_no if user.student_no else user.teacher_no }}
+                            {% endif %}
+                        </td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.sex }}</td>
+                        <td>{{ user.birth }}</td>
+                        {% if user_type == 'student' %}
+                        <td>{{ user.class_info.name if user.class_info else '-' }}</td>
+                        <td>{{ user.grade.name if user.grade else '-' }}</td>
+                        <td>{{ user.teacher.username if user.teacher else '-' }}</td>
+                        {% endif %}
+                        <td>{{ user.create_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ url_for('admin.edit_user', user_id=user.id, type=user_type) }}" 
+                                   class="btn btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{{ url_for('admin.delete_user', user_id=user.id, type=user_type) }}" 
+                                   class="btn btn-outline-danger"
+                                   onclick="return confirm('确定要删除这个用户吗？')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 分页 -->
+        {% if users.pages > 1 %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if users.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.users', page=users.prev_num, type=user_type) }}">上一页</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in users.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != users.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('admin.users', page=page_num, type=user_type) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if users.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.users', page=users.next_num, type=user_type) }}">下一页</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">暂无用户数据</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
