@@ -3,6 +3,7 @@
 {% block title %}发布通知 - 毕业论文管理系统{% endblock %}
 
 {% block content %}
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2><i class="fas fa-plus"></i> 发布通知</h2>
     <a href="{{ url_for('admin.notices') }}" class="btn btn-secondary">
@@ -46,4 +47,22 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script>
+    // CKEditor 5的初始化方式（使用ClassicEditor.create）
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor
+            .create(document.querySelector('#content'), {
+                // 配置项（对应你原来的需求）
+                height: 350,  // 编辑器高度
+                resizeEnabled: true  // 允许调整大小（CKEditor 5中属性名是驼峰式）
+            })
+            .then(editor => {
+                console.log('CKEditor初始化成功', editor);
+            })
+            .catch(error => {
+                console.error('CKEditor初始化失败：', error);  // 打印错误信息，方便调试
+            });
+    });
+</script>
 {% endblock %}

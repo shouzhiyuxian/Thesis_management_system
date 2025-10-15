@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}编辑通知 - 管理员{% endblock %}
 {% block content %}
+<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/47.0.0/ckeditor5.css" />
 <div class="container mt-4">
     <h2>编辑通知</h2>
     <form method="post">
@@ -20,4 +21,23 @@
         <a href="{{ url_for('admin.notices') }}" class="btn btn-secondary ms-2">返回</a>
     </form>
 </div>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script>
+    // CKEditor 5的初始化方式（使用ClassicEditor.create）
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor
+            .create(document.querySelector('#content'), {
+                // 配置项（对应你原来的需求）
+                height: 350,  // 编辑器高度
+                resizeEnabled: true  // 允许调整大小（CKEditor 5中属性名是驼峰式）
+            })
+            .then(editor => {
+                console.log('CKEditor初始化成功', editor);
+            })
+            .catch(error => {
+                console.error('CKEditor初始化失败：', error);  // 打印错误信息，方便调试
+            });
+    });
+</script>
 {% endblock %}
